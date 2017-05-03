@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendData(){
-        Toast.makeText(this, "Get Data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Sends Data", Toast.LENGTH_SHORT).show();
         retrofit.create(NetworkService.class).sendPost("dodol", "body dodol")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onNext(Post post) {
-                        Log.d(TAG, "onNext: " + post.toString());
+                        Log.d(TAG, "Post onNext: " + post.toString());
                     }
                 });
     }
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onNext(Post post) {
-                        Log.d(TAG, "onNext: " + post.toString());
+                        Log.d(TAG, "Get onNext: " + post.toString());
                     }
                 });
     }
