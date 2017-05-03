@@ -1,5 +1,6 @@
 package com.ganteng.botak.retrofitrxdagger.login;
 
+import android.content.Intent;
 import android.support.annotation.RestrictTo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.ganteng.botak.retrofitrxdagger.R;
 import com.ganteng.botak.retrofitrxdagger.base.App;
 import com.ganteng.botak.retrofitrxdagger.login.model.Post;
+import com.ganteng.botak.retrofitrxdagger.menu.MenuActivity;
 import com.ganteng.botak.retrofitrxdagger.network.NetworkService;
 
 import javax.inject.Inject;
@@ -20,6 +22,7 @@ import butterknife.ButterKnife;
 import retrofit2.Retrofit;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -31,6 +34,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.submitBtn)
     Button submitBtn;
+
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +62,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void sendData(){
         Toast.makeText(this, "Sends Data", Toast.LENGTH_SHORT).show();
-        retrofit.create(NetworkService.class).sendPost("dodol", "body dodol")
+        Observable<Post> observable = retrofit.create(NetworkService.class).sendPost("dodol", "body dodol")
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Post>() {
+                .observeOn(AndroidSchedulers.mainThread());
+        subscription = observable.subscribe(new Subscriber<Post>() {
                     @Override
                     public void onCompleted() {
-
+                        startMenuActivity();
                     }
 
                     @Override
@@ -99,5 +104,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "Get onNext: " + post.toString());
                     }
                 });
+    }
+
+    private void startMenuActivity(){
+        Intent intent = new Intent(this, MenuActivity.class);
+        Bundle bundle = new Bundle();
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        subscription.unsubscribe();
+        Log.d(TAG, "onDestroy: unsubscribed");
+        super.onDestroy();
+
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause: ");
+        super.onPause();
+        
     }
 }
