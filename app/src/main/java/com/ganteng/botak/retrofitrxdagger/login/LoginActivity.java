@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ganteng.botak.retrofitrxdagger.R;
@@ -35,23 +36,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.submitBtn)
     Button submitBtn;
 
+    @BindView(R.id.usernameInput)
+    EditText usernameInput;
+
+    @BindView(R.id.passwordInput)
+    EditText passwordInput;
+
     private Subscription subscription;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ((App)getApplication()).getComponent().inject(this);
-
         ButterKnife.bind(this);
-
-
         submitBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        setLogin();
         switch (v.getId()){
             case R.id.submitBtn:
                 sendData();
@@ -60,9 +66,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void setLogin(){
+        username = usernameInput.getText().toString();
+        password = passwordInput.getText().toString();
+    }
+
     private void sendData(){
         Toast.makeText(this, "Sends Data", Toast.LENGTH_SHORT).show();
-        Observable<Post> observable = retrofit.create(NetworkService.class).sendPost("dodol", "body dodol")
+        Observable<Post> observable = retrofit.create(NetworkService.class).sendPost(username, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         subscription = observable.subscribe(new Subscriber<Post>() {
