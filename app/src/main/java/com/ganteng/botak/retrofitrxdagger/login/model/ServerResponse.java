@@ -55,4 +55,14 @@ public class ServerResponse {
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }
+
+    @Override
+    public String toString() {
+        return "Server{" +
+                "username = " + username + '\'' +
+                "password = " + password + '\'' +
+                "message = " + message + '\'' +
+                ", response = " + responseCode + '\'' +
+                "}";
+    }
 }

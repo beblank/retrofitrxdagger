@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.ganteng.botak.retrofitrxdagger.R;
 import com.ganteng.botak.retrofitrxdagger.base.App;
 import com.ganteng.botak.retrofitrxdagger.login.model.Post;
+import com.ganteng.botak.retrofitrxdagger.login.model.ServerResponse;
 import com.ganteng.botak.retrofitrxdagger.menu.MenuActivity;
 import com.ganteng.botak.retrofitrxdagger.network.NetworkService;
 
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setLogin();
         switch (v.getId()){
             case R.id.submitBtn:
-                sendData();
+                sendLogin();
                 break;
         }
 
@@ -92,6 +93,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "Post onNext: " + post.toString());
                     }
                 });
+    }
+
+    private void sendLogin(){
+        Toast.makeText(this, "send Login", Toast.LENGTH_SHORT).show();
+        Observable<ServerResponse> observable = retrofit.create(NetworkService.class).postLogin("login", username, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        subscription = observable.subscribe(new Subscriber<ServerResponse>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "onError: " + e);
+            }
+
+            @Override
+            public void onNext(ServerResponse serverResponse) {
+                Log.d(TAG, "onNext: " + serverResponse.toString());
+            }
+        });
     }
 
     private void getData(){

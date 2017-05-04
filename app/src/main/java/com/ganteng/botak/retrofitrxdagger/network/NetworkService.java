@@ -26,7 +26,7 @@ public interface NetworkService {
     Observable<Post> getPost();
 
     @FormUrlEncoded
-    @POST("/api.php")
+    @POST("/login/api.php")
     Observable<ServerResponse> postLogin(
             @Field("method") String method,
             @Field("username") String username,
