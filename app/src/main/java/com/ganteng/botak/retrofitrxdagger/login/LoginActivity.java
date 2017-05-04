@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         subscription = observable.subscribe(new Subscriber<ServerResponse>() {
             @Override
             public void onCompleted() {
-
+                startMenuActivity();
             }
 
             @Override
@@ -113,7 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onNext(ServerResponse serverResponse) {
-                Log.d(TAG, "onNext: " + serverResponse.toString());
+                Log.d(TAG, "onNext: " + serverResponse.getMessage() + " " + serverResponse.toString());
+
             }
         });
     }
