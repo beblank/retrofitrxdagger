@@ -148,6 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -156,12 +157,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onDestroy: unsubscribed");
         super.onDestroy();
 
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause: ");
-        super.onPause();
-        
     }
 }
